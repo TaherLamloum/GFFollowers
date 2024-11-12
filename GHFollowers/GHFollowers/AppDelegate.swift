@@ -18,6 +18,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.rootViewController = createTabBar()
         window?.makeKeyAndVisible()
+        configureNavigationbar() 
         
         return true
     }
@@ -41,6 +42,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         tabBar.viewControllers = [createSearchNC(), createFavouriteNC()]
         return tabBar
+    }
+    func configureNavigationbar(){
+        UINavigationBar.appearance().tintColor = .systemGreen
     }
 }
 
