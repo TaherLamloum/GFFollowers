@@ -2,7 +2,7 @@
 //  FollowerListVC.swift
 //  GHFollowers
 //
-//  Created by taher elnehr on 26/10/2024.
+//  Created by taher elnehr on 24/02/2025.
 //
 
 import UIKit
@@ -12,15 +12,36 @@ protocol FollowerListVCDelegate: class {
 }
 
 class FollowerListVC: UIViewController {
+    
     enum Section { case main }
-    
-    var username: String!
-    var followers: [Follower] = []
-    var filteredFollowers: [Follower] = []
-    var page = 1
-    var hasMoreFollowers = true
-    var isSearching = false
-    
+        
+        var username: String
+        var followers: [Follower]
+        var filteredFollowers: [Follower]
+        var page: Int
+        var hasMoreFollowers: Bool
+        var isSearching: Bool
+        
+        init(username: String,
+             followers: [Follower] = [],
+             filteredFollowers: [Follower] = [],
+             page: Int = 1,
+             hasMoreFollowers: Bool = true,
+             isSearching: Bool = false) {
+            
+            self.username = username
+            self.followers = followers
+            self.filteredFollowers = filteredFollowers
+            self.page = page
+            self.hasMoreFollowers = hasMoreFollowers
+            self.isSearching = isSearching
+            
+            super.init(nibName: nil, bundle: nil)
+        }
+        
+        required init?(coder: NSCoder) {
+            fatalError("init(coder:) has not been implemented")
+        }
     var collectionView: UICollectionView!
     var dataSource: UICollectionViewDiffableDataSource<Section, Follower>!
 
@@ -65,7 +86,7 @@ class FollowerListVC: UIViewController {
     
     
     func getFollowers(username: String, page: Int) {
-        showLoadingView() 
+        showLoadingView()
         NetworkManager.shared.getFollowers(for: username, page: page) { [weak self] result in
             guard let self = self else { return }
             self.dismissLoadingView()
@@ -179,6 +200,4 @@ extension FollowerListVC: FollowerListVCDelegate {
         collectionView.setContentOffset(.zero, animated: true)
         getFollowers(username: username, page: page)
     }
-    
-    
 }
