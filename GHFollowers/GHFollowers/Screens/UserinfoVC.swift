@@ -7,12 +7,11 @@
 
 import UIKit
 
-protocol UserInfoVCDelegate: class {
-    func didTapGitHubProfile(for user: User)
-    func didTapGetFollowers(for user: User)
+protocol UserinfoVCDelegate: AnyObject {
+    func didRequestFollowers(for username: String)
 }
 
-class UserinfoVC: UIViewController {
+class UserinfoVC: GFDataLoadingVC {
     
     let headerView = UIView()
     let itemViewOne = UIView()
@@ -21,7 +20,7 @@ class UserinfoVC: UIViewController {
     var itemViews: [UIView] = []
     
     var username: String!
-    weak var delegate: FollowerListVCDelegate!
+    weak var delegate: UserinfoVCDelegate!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -80,7 +79,7 @@ class UserinfoVC: UIViewController {
         
         NSLayoutConstraint.activate([
             headerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            headerView.heightAnchor.constraint(equalToConstant: 180),
+            headerView.heightAnchor.constraint(equalToConstant: 210),
             
             itemViewOne.topAnchor.constraint(equalTo: headerView.bottomAnchor, constant: padding),
             itemViewOne.heightAnchor.constraint(equalToConstant: itemHeight),
@@ -89,7 +88,7 @@ class UserinfoVC: UIViewController {
             itemViewTwo.heightAnchor.constraint(equalToConstant: itemHeight),
             
             dateLabel.topAnchor.constraint(equalTo: itemViewTwo.bottomAnchor, constant: padding),
-            dateLabel.heightAnchor.constraint(equalToConstant: 18)
+            dateLabel.heightAnchor.constraint(equalToConstant: 50)
         ])
     }
     
@@ -104,9 +103,8 @@ class UserinfoVC: UIViewController {
         dismiss(animated: true)
     }
 }
-
-extension UserinfoVC: UserInfoVCDelegate {
-    
+extension UserinfoVC: GFRepoItemVCDelegate {
+      
     func didTapGitHubProfile(for user: User) {
         guard let url = URL(string: user.htmlUrl) else {
             presntGFAlertOnMainThread(title: "Invalid URL", message: "The url attached is invalid", buttonTitle: "OK")
@@ -114,6 +112,9 @@ extension UserinfoVC: UserInfoVCDelegate {
         }
         presentSafariVC(with: url)
     }
+}
+
+extension UserinfoVC: GFFollowerItemVCDelegate {
     
     func didTapGetFollowers(for user: User) {
         guard user.followers != 0 else {
@@ -121,8 +122,6 @@ extension UserinfoVC: UserInfoVCDelegate {
             return
         }
         delegate.didRequestFollowers(for: user.login)
-        dismissVc() 
+        dismissVc()
     }
-    
-
 }
