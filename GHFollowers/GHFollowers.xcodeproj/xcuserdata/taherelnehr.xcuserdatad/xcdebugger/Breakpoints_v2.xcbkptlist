@@ -7,48 +7,48 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "02908962-8FBE-4F83-A02C-07BCF945CF19"
+            uuid = "15DD3BF9-EE0D-4DA1-A81E-E92734C2F884"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "GHFollowers/Extensions/UIViewController+Ext.swift"
+            filePath = "GHFollowers/Managers/NetworkManager.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "16"
-            endingLineNumber = "16"
-            landmarkName = "presntGFAlertOnMainThread(title:message:buttonTitle:)"
+            startingLineNumber = "32"
+            endingLineNumber = "32"
+            landmarkName = "getFollowers(for:page:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "3A2F586B-E21B-42F5-8C7D-A29793956649"
+            uuid = "FC845DEA-3913-4434-96BC-E2760E339DB3"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "GHFollowers/Screens/UserinfoVC.swift"
+            filePath = "GHFollowers/Managers/NetworkManager.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "108"
-            endingLineNumber = "108"
-            landmarkName = "didTapGitHubProfile(for:)"
+            startingLineNumber = "35"
+            endingLineNumber = "35"
+            landmarkName = "getFollowers(for:page:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "D5E72EAB-F30D-4FD0-B9E5-14628C3D1AFA"
+            uuid = "4184DFE9-0669-404E-9DA4-E996DACF7B03"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "GHFollowers/Extensions/UIViewController+Ext.swift"
+            filePath = "GHFollowers/Managers/NetworkManager.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "23"
-            endingLineNumber = "23"
-            landmarkName = "presentSafariVC(with:)"
+            startingLineNumber = "40"
+            endingLineNumber = "40"
+            landmarkName = "getFollowers(for:page:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

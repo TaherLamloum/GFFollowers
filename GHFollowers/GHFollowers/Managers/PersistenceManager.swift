@@ -10,13 +10,11 @@ import Foundation
 enum PersistenceActionType {
     case add, remove
 }
+
 enum PersistenceManager {
     
     static private let defaults = UserDefaults.standard
-    
-    enum Keys {
-        static let favourites = "favourites"
-    }
+    enum Keys { static let favourites = "favourites" }
     
 static func updateWith(favourite: Follower, actionType: PersistenceActionType, completed: @escaping (GFError?) -> Void) {
     retriveFavorites { result in
@@ -52,10 +50,12 @@ static func updateWith(favourite: Follower, actionType: PersistenceActionType, c
         
         do {
             let decoder = JSONDecoder()
+            decoder.keyDecodingStrategy = .convertFromSnakeCase
+            decoder.dateDecodingStrategy = .iso8601
             let favourites = try decoder.decode([Follower].self, from: favouriteData)
             completed(.success(favourites))
         } catch {
-            print(error, "ERROR")
+            print(error, "ERROR IN FAVOURITES")
             completed(.failure(.unableToFavourite))
         }
     }
@@ -66,6 +66,7 @@ static func updateWith(favourite: Follower, actionType: PersistenceActionType, c
             let encoder = JSONEncoder()
             let encodedFavourites = try encoder.encode(favourites)
             defaults.set(encodedFavourites , forKey: Keys.favourites)
+            defaults.synchronize()
             return nil
         } catch {
             return .unableToFavourite

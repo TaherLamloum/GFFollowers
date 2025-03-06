@@ -10,38 +10,38 @@ import UIKit
 class FollowerListVC: GFDataLoadingVC {
     
     enum Section { case main }
+    
+    var username: String
+    var followers: [Follower]
+    var filteredFollowers: [Follower]
+    var page: Int
+    var hasMoreFollowers: Bool
+    var isSearching: Bool
+    var isLoadingMoreFollowers = false
+    
+    init(username: String,
+         followers: [Follower] = [],
+         filteredFollowers: [Follower] = [],
+         page: Int = 1,
+         hasMoreFollowers: Bool = true,
+         isSearching: Bool = false) {
         
-        var username: String
-        var followers: [Follower]
-        var filteredFollowers: [Follower]
-        var page: Int
-        var hasMoreFollowers: Bool
-        var isSearching: Bool
-        var isLoadingMoreFollowers = false
+        self.username = username
+        self.followers = followers
+        self.filteredFollowers = filteredFollowers
+        self.page = page
+        self.hasMoreFollowers = hasMoreFollowers
+        self.isSearching = isSearching
         
-        init(username: String,
-             followers: [Follower] = [],
-             filteredFollowers: [Follower] = [],
-             page: Int = 1,
-             hasMoreFollowers: Bool = true,
-             isSearching: Bool = false) {
-            
-            self.username = username
-            self.followers = followers
-            self.filteredFollowers = filteredFollowers
-            self.page = page
-            self.hasMoreFollowers = hasMoreFollowers
-            self.isSearching = isSearching
-            
-            super.init(nibName: nil, bundle: nil)
-        }
-        
-        required init?(coder: NSCoder) {
-            fatalError("init(coder:) has not been implemented")
-        }
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     var collectionView: UICollectionView!
     var dataSource: UICollectionViewDiffableDataSource<Section, Follower>!
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         configureViewController()
@@ -49,7 +49,7 @@ class FollowerListVC: GFDataLoadingVC {
         configureCollectionView()
         getFollowers(username: username, page: page)
         configureDataSource()
-         
+        
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -64,7 +64,7 @@ class FollowerListVC: GFDataLoadingVC {
     }
     
     func configureCollectionView() {
-    collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: UIHelper.createThreeColumnFlawLayout(in: view))
+        collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: UIHelper.createThreeColumnFlawLayout(in: view))
         view.addSubview(collectionView)
         collectionView.delegate = self
         collectionView.backgroundColor = .systemBackground
@@ -81,35 +81,43 @@ class FollowerListVC: GFDataLoadingVC {
     }
     
     
-    func getFollowers(username: String, page: Int) {
+    func getFollowers(username: String, page: Int)  {
         showLoadingView()
         isLoadingMoreFollowers = true
-        NetworkManager.shared.getFollowers(for: username, page: page) { [weak self] result in
-            guard let self = self else { return }
-            self.dismissLoadingView()
-            switch result {
-            case .success(let followers):
-                if followers.count < 100 { self.hasMoreFollowers = false }
-                self.followers.append(contentsOf: followers)
-                
-                if self.followers.isEmpty {
-                    let message = "This user dosnen't have any followers. Go follow them 😂."
-                    DispatchQueue.main.async {
-                        self.showEmptyStateView(with: message, in: self.view)
-                        return
-                    }
+        
+        Task {
+            do {
+                let followers = try await NetworkManager.shared.getFollowers(for: username, page: page)
+                updateUI(with: followers)
+                dismissLoadingView()
+            } catch {
+                if let gfError = error as? GFError {
+                    presentGFAlert(title: "Bad stuff happened", message: gfError.rawValue, buttonTitle: "Ok")
+                } else {
+                    presentDefaultError()
                 }
-                self.updateData(on: self.followers)
-                
-            case .failure(let error):
-                self.presntGFAlertOnMainThread(title: "Bad stuff happened", message: error.rawValue, buttonTitle: "Ok")
+                dismissLoadingView() 
             }
-            self.isLoadingMoreFollowers = false
         }
     }
+    
+    func updateUI(with followers: [Follower]) {
+        if followers.count < 100 { self.hasMoreFollowers = false }
+        self.followers.append(contentsOf: followers)
+        
+        if self.followers.isEmpty {
+            let message = "This user dosnen't have any followers. Go follow them 😂."
+            DispatchQueue.main.async {
+                self.showEmptyStateView(with: message, in: self.view) }
+            return
+        }
+        self.updateData(on: self.followers)
+    }
+    
+    
     func configureDataSource() {
         dataSource = UICollectionViewDiffableDataSource<Section, Follower>(collectionView: collectionView, cellProvider: { (collectionView, indexPath, follower) -> UICollectionViewCell? in
-    let cell = collectionView.dequeueReusableCell(withReuseIdentifier: FollowerCell.reuseID, for: indexPath) as! FollowerCell
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: FollowerCell.reuseID, for: indexPath) as! FollowerCell
             cell.set(follower: follower)
             return cell
         })
@@ -126,28 +134,36 @@ class FollowerListVC: GFDataLoadingVC {
     
     @objc func addButtonTapped() {
         showLoadingView()
+        Task {
+            do {
+                let user = try await NetworkManager.shared.getUserInfo(for: username)
+                addUserToFavourites(user: user)
+                dismissLoadingView()
+            } catch {
+                if let gfError = error as? GFError {
+                    presentGFAlert(title: "Some thing went wrong", message: gfError.rawValue, buttonTitle: "Ok")
+                } else {
+                    presentDefaultError()
+                }
+                dismissLoadingView()
+            }
+        }
+    }
     
-        NetworkManager.shared.getUserInfo(for: username) { [weak self] result in
-            guard let self = self else { return }
-            self.dismissLoadingView()
-            
-            switch result {
-            case .success(let user):
-                let favourite = Follower(login: user.login, avatarURL: user.avatarUrl)
-                
+    func addUserToFavourites(user: User) {
+        let favourite = Follower(login: user.login, avatarUrl: user.avatarUrl, id: 0)
+        
         PersistenceManager.updateWith(favourite: favourite, actionType: .add) { [weak self] error in
             guard let self = self else { return }
-                    
+            
             guard let error = error else {
-                
-                self.presntGFAlertOnMainThread(title: "Succes!", message: "Succefully added", buttonTitle: "Horray!")
-                    return
+                DispatchQueue.main.async {
+                    self.presentGFAlert(title: "Succes!", message: "Succefully added", buttonTitle: "Horray!")
                 }
-            self.presntGFAlertOnMainThread(title: "Something went wrong", message: error.rawValue, buttonTitle: "Ok")
+                return
             }
-                
-            case .failure(let error):
-            self.presntGFAlertOnMainThread(title: "Some thing went wrong", message: error.rawValue, buttonTitle: "Ok")
+            DispatchQueue.main.async {
+                self.presentGFAlert(title: "Something went wrong", message: error.rawValue, buttonTitle: "Ok")
             }
         }
     }

@@ -23,6 +23,7 @@ class GFTabBarController: UITabBarController {
         
         return UINavigationController(rootViewController: searchVC)
     }
+     
     func createFavouriteNC() -> UINavigationController {
         let favouriteListVC = FavouriteListVC()
         favouriteListVC.title = "Favourites"

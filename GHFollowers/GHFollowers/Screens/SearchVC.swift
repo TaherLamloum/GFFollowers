@@ -11,7 +11,7 @@ class SearchVC: UIViewController {
     
     let logoImageView = UIImageView()
     let usernameTextField = GFTextField()
-    let callToActionButton = GFButton(backgroundColor: .systemGreen, title: "Get Followers")
+    let callToActionButton = GFButton(color: .systemGreen, title: "Get Followers", systemImageName: "person.3")
     
     var isUserNameEntered: Bool {
         return !usernameTextField.text!.isEmpty
@@ -40,7 +40,7 @@ class SearchVC: UIViewController {
     @objc func pushFollowerListVC(){
         
         guard isUserNameEntered else {
-            presntGFAlertOnMainThread(title: "Empty user name", message: "Please enter a username. We need to know who to look for 😂", buttonTitle: "Ok")
+            presentGFAlert(title: "Empty user name", message: "Please enter a username. We need to know who to look for 😂", buttonTitle: "Ok")
             return
         }
         
@@ -74,7 +74,7 @@ class SearchVC: UIViewController {
         ])
     }
 
-    func configureCallToActionButton() {
+    func configureCallToActionButton() { 
         callToActionButton.addTarget(self, action: #selector(pushFollowerListVC), for: .touchUpInside)
         
     NSLayoutConstraint.activate([

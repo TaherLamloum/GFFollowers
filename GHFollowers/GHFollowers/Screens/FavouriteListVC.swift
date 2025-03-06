@@ -41,24 +41,32 @@ class FavouriteListVC: GFDataLoadingVC {
         
     func getFavourites() {
         PersistenceManager.retriveFavorites { [weak self] result in
-        guard let self = self else { return }
-        switch result {
-        case .success(let favourites):
-            if favourites.isEmpty {
-                self.showEmptyStateView(with: "No favourites? add one on follower screen", in: self.view)
-            } else {
-                self.favourites = favourites
+            guard let self = self else { return }
+            switch result {
+            case .success(let favourites):
+                self.updateUI(with: favourites)
+                
+            case .failure(let error):
                 DispatchQueue.main.async {
-                    self.tableView.reloadData()
-                    self.view.bringSubviewToFront(self.tableView)
-                }
-            }
-        case .failure(let error):
-            self.presntGFAlertOnMainThread(title: "Something went wrong", message: error.rawValue, buttonTitle: "Ok")
+                    self.presentGFAlert(title: "Something went wrong", message: error.rawValue, buttonTitle: "Ok")
                 }
             }
         }
     }
+    
+    func updateUI(with favourites: [Follower]) {
+        favourites.forEach { print($0.avatarUrl, "avatar urls") }
+        if favourites.isEmpty {
+            self.showEmptyStateView(with: "No favourites? add one on follower screen", in: self.view)
+        } else {
+            self.favourites = favourites
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+                self.view.bringSubviewToFront(self.tableView)
+            }
+        }
+    }
+}
     
 extension FavouriteListVC: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -68,7 +76,8 @@ extension FavouriteListVC: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: FavouriteCell.reuseID) as! FavouriteCell
         let favourite = favourites[indexPath.row]
-        cell.set(favourite: favourite)
+        cell.tag = favourite.id ?? 0
+        cell.set(favourite: favourite, userIdentifier: favourite.id ?? 0)
         return cell
     }
     
@@ -90,7 +99,9 @@ extension FavouriteListVC: UITableViewDelegate, UITableViewDataSource {
                 tableView.deleteRows(at: [indexPath], with: .left)
                 return
             }
-            self.presntGFAlertOnMainThread(title: "Unable to remove", message: error.rawValue, buttonTitle: "Ok")
+            DispatchQueue.main.async {
+                self.presentGFAlert(title: "Unable to remove", message: error.rawValue, buttonTitle: "Ok")
+            }
         }
     }
 }

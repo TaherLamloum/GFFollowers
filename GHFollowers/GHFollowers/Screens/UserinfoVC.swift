@@ -36,14 +36,16 @@ class UserinfoVC: GFDataLoadingVC {
     }
     
     func getUserInfo() {
-        NetworkManager.shared.getUserInfo(for: username) { [weak self] result in
-            guard let self = self else { return }
-            switch result {
-            case .success(let user):
-                DispatchQueue.main.async { self.configureUIElements(with: user) }
-             
-            case .failure(let error):
-                self.presntGFAlertOnMainThread(title: "Something went wrong", message: error.rawValue, buttonTitle: "Ok")
+        Task {
+            do {
+                let user = try await NetworkManager.shared.getUserInfo(for: username)
+                configureUIElements(with: user)
+            } catch {
+                if let gfError = error as? GFError {
+                    presentGFAlert(title: "Some thing went wrong", message: gfError.rawValue, buttonTitle: "Ok")
+                } else {
+                    presentDefaultError()
+                }
             }
         }
     }
@@ -107,7 +109,7 @@ extension UserinfoVC: GFRepoItemVCDelegate {
       
     func didTapGitHubProfile(for user: User) {
         guard let url = URL(string: user.htmlUrl) else {
-            presntGFAlertOnMainThread(title: "Invalid URL", message: "The url attached is invalid", buttonTitle: "OK")
+            presentGFAlert(title: "Invalid URL", message: "The url attached is invalid", buttonTitle: "OK")
             return
         }
         presentSafariVC(with: url)
@@ -118,7 +120,7 @@ extension UserinfoVC: GFFollowerItemVCDelegate {
     
     func didTapGetFollowers(for user: User) {
         guard user.followers != 0 else {
-            presntGFAlertOnMainThread(title: "No followers", message: "This user has no followers😏. ", buttonTitle: "so sad")
+            presentGFAlert(title: "No followers", message: "This user has no followers😏. ", buttonTitle: "so sad")
             return
         }
         delegate.didRequestFollowers(for: user.login)

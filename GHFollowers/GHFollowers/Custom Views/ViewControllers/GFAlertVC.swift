@@ -12,7 +12,7 @@ class GFAlertVC: UIViewController {
     let containerView = GFAlertContainerView()
     let titleLabel = GFTitlelabel(textAligment: .center, fontSize: 20)
     let messageLabel = GFBodyLabel(textAligment: .center)
-    let actionButton = GFButton(backgroundColor: .systemPink, title: "Ok")
+    let actionButton = GFButton(color: .systemPink, title: "Ok", systemImageName: "checkmark.circle")
      
     var alertTitle: String?
     var message: String?
@@ -35,12 +35,14 @@ class GFAlertVC: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = UIColor.black.withAlphaComponent(0.75)
         view.addSubviews(containerView, titleLabel, actionButton, messageLabel)
+        
         configureContainerView()
         configureTitleLabel()
         configureActionButton()
         configureMessageLabel()
          
     }
+    
     func configureContainerView() {
         
         NSLayoutConstraint.activate([
@@ -50,6 +52,7 @@ class GFAlertVC: UIViewController {
             containerView.heightAnchor.constraint(equalToConstant: 220)
         ])
     }
+    
     func configureTitleLabel() {
         titleLabel.text = alertTitle ?? "Default Title"
         
@@ -85,6 +88,7 @@ class GFAlertVC: UIViewController {
             
         ])
     }
+    
     @objc func dismissVC() {
         dismiss(animated: true )
     }

@@ -20,9 +20,9 @@ class GFBodyLabel: UILabel {
     
     convenience init(textAligment: NSTextAlignment) {
         self.init(frame: .zero)
-        self.textAlignment = textAligment
-        
+        self.textAlignment = textAligment 
     }
+    
     private func configure() {
         textColor = .secondaryLabel
         font = UIFont.preferredFont(forTextStyle: .body)

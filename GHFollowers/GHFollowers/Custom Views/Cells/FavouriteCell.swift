@@ -13,6 +13,15 @@ class FavouriteCell: UITableViewCell {
     let avatarImageView = GFAvatarImageView(frame: .zero )
     let usernameLabel = GFTitlelabel(textAligment: .left, fontSize: 26)
     
+//    var favourite: Follower? {
+//        didSet {
+//            guard let favourite = favourite else { return }
+//            if self.tag == userIdentifier {
+//               
+//            }
+//           
+//        }
+//    }
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         configureUI()
@@ -22,12 +31,12 @@ class FavouriteCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func set(favourite: Follower) {
-        usernameLabel.text = favourite.login
-        NetworkManager.shared.downloadImage(from: favourite.avatarURL) { [weak self] image in
-            guard let self = self else { return }
-            DispatchQueue.main.async { self.avatarImageView.image = image  }
+    func set(favourite: Follower, userIdentifier: Int) {
+        if self.tag == userIdentifier {
+            avatarImageView.downloadImage(fromURL: favourite.avatarUrl)
+            usernameLabel.text = favourite.login
         }
+    
     }
     
     private func configureUI() {
@@ -37,15 +46,19 @@ class FavouriteCell: UITableViewCell {
         let padding: CGFloat = 12
         
         NSLayoutConstraint.activate([
-            avatarImageView.centerYAnchor.constraint(equalTo: self.centerYAnchor),
-            avatarImageView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: padding),
+            avatarImageView.centerYAnchor.constraint(equalTo: centerYAnchor),
+            avatarImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: padding),
             avatarImageView.widthAnchor.constraint(equalToConstant: 60),
             avatarImageView.heightAnchor.constraint(equalToConstant: 60),
             
-            usernameLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor),
+            usernameLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
             usernameLabel.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: 24),
-            usernameLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -padding),
+            usernameLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -padding),
             usernameLabel.heightAnchor.constraint(equalToConstant: 40 )
         ])
+    }
+    
+    override func prepareForReuse() {
+//        self.favourite = nil
     }
 }
