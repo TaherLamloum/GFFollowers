@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SwiftUI
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -14,9 +15,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
-     
+      
+       let contentView = FollowersListView()
         window = UIWindow(frame: UIScreen.main.bounds)
-        window?.rootViewController = GFTabBarController()
+        window?.rootViewController = UIHostingController(rootView: contentView)
+//        window?.rootViewController = GFTabBarController()
         window?.makeKeyAndVisible()
         configureNavigationbar() 
         

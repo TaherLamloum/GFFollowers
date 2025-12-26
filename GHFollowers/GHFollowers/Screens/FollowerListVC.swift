@@ -151,7 +151,7 @@ class FollowerListVC: GFDataLoadingVC {
     }
     
     func addUserToFavourites(user: User) {
-        let favourite = Follower(login: user.login, avatarUrl: user.avatarUrl, id: 0)
+        let favourite = Follower(login: user.login, avatar_url: user.avatarUrl, id: 0)
         
         PersistenceManager.updateWith(favourite: favourite, actionType: .add) { [weak self] error in
             guard let self = self else { return }

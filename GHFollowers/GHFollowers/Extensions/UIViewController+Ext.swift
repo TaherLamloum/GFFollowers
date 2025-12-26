@@ -19,7 +19,7 @@ extension UIViewController {
     }
     
     func presentDefaultError( ) {
-        print(title, "Alert_Title")
+        print(title, "Alert_Title" ?? "")
         let alertVC = GFAlertVC(alertTitle: "Some thing went wrong ",
                                 message: "We are unable to comlete this task at this time. Please try again.",
                                 buttonTitle: "Ok")

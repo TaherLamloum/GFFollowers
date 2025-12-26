@@ -33,7 +33,7 @@ class FavouriteCell: UITableViewCell {
     
     func set(favourite: Follower, userIdentifier: Int) {
         if self.tag == userIdentifier {
-            avatarImageView.downloadImage(fromURL: favourite.avatarUrl)
+            avatarImageView.downloadImage(fromURL: favourite.avatar_url)
             usernameLabel.text = favourite.login
         }
     
