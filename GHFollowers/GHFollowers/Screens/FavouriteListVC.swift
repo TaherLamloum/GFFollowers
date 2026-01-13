@@ -55,7 +55,7 @@ class FavouriteListVC: GFDataLoadingVC {
     }
     
     func updateUI(with favourites: [Follower]) {
-        favourites.forEach { print($0.avatar_url, "avatar urls") }
+        favourites.forEach { print($0.avatarUrl, "avatar urls") }
         if favourites.isEmpty {
             self.showEmptyStateView(with: "No favourites? add one on follower screen", in: self.view)
         } else {

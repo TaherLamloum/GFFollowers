@@ -9,6 +9,6 @@ import Foundation
 
 struct Follower: Codable, Hashable, Identifiable {
     var login: String
-    var avatar_url: String
+    var avatarUrl: String
     var id: Int?
 }

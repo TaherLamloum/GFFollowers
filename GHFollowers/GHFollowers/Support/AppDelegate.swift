@@ -16,10 +16,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
       
-       let contentView = FollowersListView()
+       let contentView = SearchVC()
         window = UIWindow(frame: UIScreen.main.bounds)
-        window?.rootViewController = UIHostingController(rootView: contentView)
-//        window?.rootViewController = GFTabBarController()
+//        window?.rootViewController = UIHostingController(rootView: contentView)
+        window?.rootViewController = GFTabBarController()
         window?.makeKeyAndVisible()
         configureNavigationbar() 
         

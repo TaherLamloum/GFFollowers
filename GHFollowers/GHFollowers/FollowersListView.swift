@@ -23,7 +23,7 @@ struct FollowersListView: View {
                 } else {
                     List(viewModel.followers) { follower in
                         HStack {
-                            AsyncImage(url: URL(string: follower.avatar_url)) { image in
+                            AsyncImage(url: URL(string: follower.avatarUrl)) { image in
                                 image.resizable()
                             } placeholder: {
                                 ProgressView()
@@ -36,13 +36,13 @@ struct FollowersListView: View {
                         }
                     }
                     .refreshable {
-                        viewModel.fetchFollowers(for: "Sallen0400")
+                        viewModel.fetchFollowers(for: "TaherLamloum")
                     }
                 }
             }
             .navigationTitle("Followers")
             .onAppear {
-                viewModel.fetchFollowers(for: "sallen0400")
+                viewModel.fetchFollowers(for: "TaherLamloum")
             }
         }
     }

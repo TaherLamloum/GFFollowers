@@ -1,32 +1,37 @@
 
 # GFFollowers
 
-## فكرة المشروع
-GFFollowers هو تطبيق iOS بسيط لعرض قائمة Followers لأي حساب GitHub.  
-المشروع يوضح قدرتك على التعامل مع **SwiftUI، MVVM، وAPI حقيقي**.
+iOS GitHub followers app built with **Swift and UIKit**.
 
 ---
 
-## المميزات (Features)
-- عرض قائمة Followers مع صورة الحساب واسم المستخدم  
-- تحميل البيانات من GitHub API  
-- Loading Indicator أثناء جلب البيانات  
-- Error Handling عند حدوث مشكلة في جلب البيانات  
-- Pull to Refresh لتحديث القائمة بسرعة  
+## 📱 Features
+- Search for any GitHub user
+- Display followers list
+- Pagination support
+- Empty state view
+- Error handling
 
 ---
 
-## التقنيات المستخدمة (Technologies)
-- Swift  
-- SwiftUI  
-- MVVM Architecture  
-- GitHub API  
-- AsyncImage لتحميل الصور
-- Xcode 15+
+## 🛠 Tech Stack
+- Swift
+- UIKit
+- URLSession
+- MVC / MVVM
+- GitHub REST API
 
 ---
 
-## طريقة التشغيل (How to Run)
-1. انسخ المشروع من GitHub:
+## 📸 Screenshots
+<!-- Add screenshots here -->
+Example:
+![Followers List](./Screenshots/FollowersList.png)
+![User Detail](./Screenshots/userDetails.png)
 
+---
+
+## 🚀 Getting Started
+1. Clone the repository:
+```bash
 git clone https://github.com/TaherLamloum/GFFollowers.git
