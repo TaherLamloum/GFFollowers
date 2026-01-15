@@ -24,11 +24,10 @@ iOS GitHub followers app built with **Swift and UIKit**.
 ---
 
 ## 📸 Screenshots
-<!-- Add screenshots here -->
-Example:
-![Followers List](./Screenshots/FollowersList.png)
-![User Detail](./Screenshots/userDetails.png)
 
+| Search | Followers List | User Details |
+|------|---------------|--------------|
+| ![Search](Screenshots/search.png) | ![Followers](Screenshots/followers_list.png) | ![User Details](Screenshots/user_details.png) |
 ---
 
 ## 🚀 Getting Started
